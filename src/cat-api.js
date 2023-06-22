@@ -2,10 +2,9 @@ import Notiflix from 'notiflix';
 import SlimSelect from 'slim-select';
 
 const optionsNotiflix = {
-  position: 'right-top',
-  distance: '12px',
+  width: '400px',
+  position: 'center-top',
   borderRadius: '25px',
-  timeout: 6000,
   cssAnimationStyle: 'fade',
 };
 
@@ -26,26 +25,26 @@ const options = {
   },
 };
 
-refs.loaderEl.style.display = 'none';
-refs.errorEl.style.display = 'none';
+refs.loaderEl.style.visibility = 'hidden';
+refs.errorEl.style.visibility = 'hidden';
 
 function showLoader() {
-  refs.loaderEl.style.display = 'block';
+  refs.loaderEl.style.visibility = 'visible';
 }
 
 export function hideLoader() {
-  refs.loaderEl.style.display = 'none';
+  refs.loaderEl.style.visibility = 'hidden';
 }
 
 // let storedBreeds = [];
 
 export function fetchBreeds() {
-  showLoader();
+  // showLoader();
   return (
     fetch(url, options)
       .then(response => {
-        if (!response.ok) {
-          throw new error(response.status);
+        if (response.status === 404) {
+          throw new Error(response.status);
         }
         return response.json();
       })
@@ -59,7 +58,7 @@ export function fetchBreeds() {
         new SlimSelect({
           select: '#selectElement',
         });
-        // hideLoader();
+        hideLoader();
       })
 
       //   --------------or----------
@@ -87,16 +86,10 @@ export function fetchCatByBreed(breedId) {
     `https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=${breedId}&api_key=${options.headers.api_key}`
   )
     .then(response => {
-      if (!response.ok) {
-        throw new console.error(response.status);
+      if (response.status === 404) {
+        throw new Error(response.status);
       }
-      // hideLoader();
       return response.json();
     })
-    .catch(() =>
-      Notiflix.Notify.failure(
-        `Oops! Something went wrong! Try reloading the page!`,
-        optionsNotiflix
-      )
-    );
+    .catch(() => console.log());
 }
