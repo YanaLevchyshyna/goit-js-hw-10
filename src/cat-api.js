@@ -26,6 +26,9 @@ const options = {
   },
 };
 
+refs.loaderEl.style.display = 'none';
+refs.errorEl.style.display = 'none';
+
 function showLoader() {
   refs.loaderEl.style.display = 'block';
 }
